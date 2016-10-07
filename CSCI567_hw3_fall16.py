@@ -37,35 +37,60 @@ def preProcess(train):
 # -------------------------Loading the data-----------------------------
 
 train_data = sio.loadmat('phishing-train.mat')
+test_data = sio.loadmat('phishing-test.mat')
+
 
 phishing_train = train_data['features']
 train_target = train_data['label']
 
+phishing_test = test_data['features']
+test_target = test_data['label']
+
 phishing_train = np.asarray(phishing_train)
+phishing_test = np.asarray(phishing_test)
 
 processed_data = preProcess(phishing_train)
+processed_test = preProcess(phishing_test)
 
 train_target = train_target.tolist()
+test_target = test_target.tolist()
 
 processed_data = processed_data.tolist()
+processed_test = processed_test.tolist()
 
 max_accuracy = float("-inf")
 optimal_c = 0
 
 for i in (-6, -5, -4, -3, -2, -1, 0, 1, 2):
     C = math.pow(4,i)
-    param = svm_parameter('-c %f -v 3' %C)
 
-    m = svm_train(train_target[0], processed_data, '-c %f -v 3' %C)
+    m = svm_train(train_target[0], processed_data, '-c %f -v 3 -q' %C)
 
     if(m>max_accuracy):
         max_accuracy = m
         optimal_c = C
 
-    print m
 
-print(max_accuracy)
-print(optimal_c)
+m = svm_train(train_target[0], processed_data, '-c %f -q' %optimal_c)
+
+p_labs, p_acc, p_vals = svm_predict(test_target[0], processed_test, m)
+
+print(p_acc)
 
 
+max_kernel_accuracy = float("-inf")
+optimal_degree = 0
 
+for i in (-3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7):
+
+    C = math.pow(4, i)
+    for degree in [1, 2, 3]:
+        m = svm_train(train_target[0], processed_data, '-c {} -v 3 -d {} -q'.format(C, degree))
+
+    if m > max_kernel_accuracy:
+        max_kernel_accuracy = m
+        optimal_degree = degree
+        optimal_kernel_C = C
+
+print(optimal_kernel_C)
+print(optimal_degree)
