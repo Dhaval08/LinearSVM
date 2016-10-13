@@ -17,7 +17,7 @@ def calculateMSE(parameters, data, target):
 
     return total/len(target)
 
-def g1Function(target):
+def g2Function(target):
     g2_data = np.ones(shape=(1000,1))
     split_g2_data = np.split(g2_data, 100)
     g1_weights = np.zeros(shape=(1,1))
@@ -57,9 +57,188 @@ def g1Function(target):
     plt.show()
 
 
+def g3Function(data, target):
+    mean_squared_error = []
+    bias_list = []
+    variance_list = []
+
+
+    for i in range(0, len(target)):
+
+        g2_data = np.ones(shape=(10,1))
+        g2_data = np.concatenate((g2_data, data[i]), axis = 1)
+
+
+        g1_weights = np.zeros(shape=(2,1))
+
+        g1_weights = linearRegression(g2_data, target[i], g1_weights)
+        mean_squared_error.append(calculateMSE(g1_weights, g2_data, target[i]))
+
+
+        predicted = np.dot(g1_weights[:,0], np.transpose(g2_data))
+
+        mean_predicted = np.mean(predicted)
+
+        variance_sum = 0
+
+        for k in range(0, len(predicted)):
+            variance_sum = variance_sum + math.pow(predicted[k] - mean_predicted , 2)
+
+        variance_list.append(variance_sum/len(predicted))
+
+        total = 0.0
+        for j in range (0, len(target[i])):
+            total = total + math.pow((np.dot(g1_weights[:,0], g2_data[j,:])) - target[i][j], 2)
+
+        bias_list.append(total/len(target[i]))   # Storing bias for each data set
+
+    bias = sum(bias_list)/len(bias_list)
+    variance = sum(variance_list)/len(variance_list)
+
+    print(variance)
+    print(bias)
+
+    plt.hist(mean_squared_error, bins=10)
+    plt.show()
+
+
+def g4Function(data, target):
+    mean_squared_error = []
+    bias_list = []
+    variance_list = []
+
+
+    for i in range(0, len(target)):
+
+        g2_data = np.ones(shape=(10,1))
+        g2_data = np.concatenate((g2_data, data[i]), axis = 1)
+        g2_data = np.concatenate((g2_data, np.power(data[i], 2)), axis=1)
+
+
+        g1_weights = np.zeros(shape=(2,1))
+
+        g1_weights = linearRegression(g2_data, target[i], g1_weights)
+        mean_squared_error.append(calculateMSE(g1_weights, g2_data, target[i]))
+
+
+        predicted = np.dot(g1_weights[:,0], np.transpose(g2_data))
+
+        mean_predicted = np.mean(predicted)
+
+        variance_sum = 0
+
+        for k in range(0, len(predicted)):
+            variance_sum = variance_sum + math.pow(predicted[k] - mean_predicted , 2)
+
+        variance_list.append(variance_sum/len(predicted))
+
+        total = 0.0
+        for j in range (0, len(target[i])):
+            total = total + math.pow((np.dot(g1_weights[:,0], g2_data[j,:])) - target[i][j], 2)
+
+        bias_list.append(total/len(target[i]))   # Storing bias for each data set
+
+    bias = sum(bias_list)/len(bias_list)
+    variance = sum(variance_list)/len(variance_list)
+
+    print(variance)
+    print(bias)
+
+    plt.hist(mean_squared_error, bins=10)
+    plt.show()
+
+
+def g5Function(data, target):
+    mean_squared_error = []
+    bias_list = []
+    variance_list = []
+
+
+    for i in range(0, len(target)):
+
+        g2_data = np.ones(shape=(10,1))
+        g2_data = np.concatenate((g2_data, data[i]), axis = 1)
+        g2_data = np.concatenate((g2_data, np.power(data[i], 2)), axis=1)
+        g2_data = np.concatenate((g2_data, np.power(data[i], 3)), axis=1)
+
+        g1_weights = np.zeros(shape=(2,1))
+
+        g1_weights = linearRegression(g2_data, target[i], g1_weights)
+        mean_squared_error.append(calculateMSE(g1_weights, g2_data, target[i]))
+
+        predicted = np.dot(g1_weights[:,0], np.transpose(g2_data))
+
+        mean_predicted = np.mean(predicted)
+
+        variance_sum = 0
+
+        for k in range(0, len(predicted)):
+            variance_sum = variance_sum + math.pow(predicted[k] - mean_predicted , 2)
+
+        variance_list.append(variance_sum/len(predicted))
+
+        total = 0.0
+        for j in range (0, len(target[i])):
+            total = total + math.pow((np.dot(g1_weights[:,0], g2_data[j,:])) - target[i][j], 2)
+
+        bias_list.append(total/len(target[i]))   # Storing bias for each data set
+
+    bias = sum(bias_list)/len(bias_list)
+    variance = sum(variance_list)/len(variance_list)
+
+    print(variance)
+    print(bias)
+
+    plt.hist(mean_squared_error, bins=10)
+    plt.show()
+
+def g6Function(data, target):
+    mean_squared_error = []
+    bias_list = []
+    variance_list = []
+
+    for i in range(0, len(target)):
+
+        g2_data = np.ones(shape=(10,1))
+        g2_data = np.concatenate((g2_data, data[i]), axis = 1)
+        g2_data = np.concatenate((g2_data, np.power(data[i], 2)), axis=1)
+        g2_data = np.concatenate((g2_data, np.power(data[i], 3)), axis=1)
+        g2_data = np.concatenate((g2_data, np.power(data[i], 4)), axis=1)
+
+        g1_weights = np.zeros(shape=(2,1))
+
+        g1_weights = linearRegression(g2_data, target[i], g1_weights)
+        mean_squared_error.append(calculateMSE(g1_weights, g2_data, target[i]))
+
+        predicted = np.dot(g1_weights[:,0], np.transpose(g2_data))
+
+        mean_predicted = np.mean(predicted)
+
+        variance_sum = 0
+
+        for k in range(0, len(predicted)):
+            variance_sum = variance_sum + math.pow(predicted[k] - mean_predicted , 2)
+
+        variance_list.append(variance_sum/len(predicted))
+
+        total = 0.0
+        for j in range (0, len(target[i])):
+            total = total + math.pow((np.dot(g1_weights[:,0], g2_data[j,:])) - target[i][j], 2)
+
+        bias_list.append(total/len(target[i]))  # Storing bias for each data set
+
+    bias = sum(bias_list)/len(bias_list)
+    variance = sum(variance_list)/len(variance_list)
+
+    print(variance)
+    print(bias)
+
+    plt.hist(mean_squared_error, bins=10)
+    plt.show()
+
 def linearRegression(train_data, train_target, linear_parameters):
     first_term = np.dot(np.transpose(train_data), train_data)
-    linear_parameters[:,0] = np.dot(np.linalg.pinv(first_term), np.dot(np.transpose(train_data), train_target))
+    linear_parameters = np.dot(np.linalg.pinv(first_term), np.dot(np.transpose(train_data), train_target))
 
     return linear_parameters
 
@@ -75,9 +254,13 @@ for i in range (0, 1000):
 split_data = np.split(uniform_samples, 100)
 split_target = np.split(target, 100)
 
-g1Function(split_target)
+g2Function(split_target)
 
+g3Function(split_data, split_target)
+g4Function(split_data, split_target)
+g5Function(split_data, split_target)
 
+g6Function(split_data, split_target)
 
 
 
