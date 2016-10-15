@@ -5,7 +5,7 @@ from svmutil import *
 
 # -------------------------- Data Pre-processing--------------------------
 def preProcess(train):
-    feature_list = [1, 6, 7, 13, 14, 15, 25, 28]
+    feature_list = [1, 6, 7, 13, 14, 25, 28]
 
     column_count = train.shape[1]
 
@@ -24,14 +24,25 @@ def preProcess(train):
                 if(train[j,i] == 0):
                     third[j,0] = 1
 
+
             transformed_data = np.concatenate((transformed_data, first), axis=1)
             transformed_data = np.concatenate((transformed_data, second), axis=1)
             transformed_data = np.concatenate((transformed_data, third), axis=1)
 
         else:
-            column = np.empty(shape=(2000,1))
-            column[:,0] = train[:,i]
-            transformed_data = np.concatenate((transformed_data, column), axis=1)
+
+            if(-1 not in train[:,i]):
+                column = np.empty(shape=(2000,1))
+                column[:,0] = train[:,i]
+                transformed_data = np.concatenate((transformed_data, column), axis=1)
+
+            else:
+                first = np.zeros(shape=(2000,1))
+                for j in range(0,2000):
+                    if(train[j,i] == 1):
+                        first[j,0] = 1
+
+                transformed_data = np.concatenate((transformed_data, first), axis=1)
 
     return transformed_data
 # -------------------------Loading the data-----------------------------
@@ -57,8 +68,8 @@ test_target = test_target.tolist()
 processed_data = processed_data.tolist()
 processed_test = processed_test.tolist()
 
-optimal_gamma = 0.0625
-optimal_C = 16
+optimal_gamma = 0.25
+optimal_C = 1
 
 m = svm_train(train_target[0], processed_data, '-c {} -g {} -q'.format(optimal_C, optimal_gamma))
 

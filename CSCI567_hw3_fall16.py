@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from svmutil import *
 
 # **************************Part A *************************************
-
+'''
 def calculateMSE(parameters, data, target):
 
     total = 0
@@ -332,14 +332,14 @@ g6Function(split_data, split_target, 100)
 
 print 'For function h'
 hFunction(split_data, split_target, 100)
-
-
 '''
+
+
 # **************************Part B *************************************
 
 # -------------------------- Data Pre-processing--------------------------
 def preProcess(train):
-    feature_list = [1, 6, 7, 13, 14, 15, 25, 28]
+    feature_list = [1, 6, 7, 13, 14, 25, 28]
 
     column_count = train.shape[1]
 
@@ -372,14 +372,11 @@ def preProcess(train):
 
             else:
                 first = np.zeros(shape=(2000,1))
-                second = np.zeros(shape=(2000,1))
                 for j in range(0,2000):
                     if(train[j,i] == 1):
                         first[j,0] = 1
-                    if(train[j,i] == 0):
-                        second[j,0] = 1
+
                 transformed_data = np.concatenate((transformed_data, first), axis=1)
-                transformed_data = np.concatenate((transformed_data, second), axis=1)
 
     return transformed_data
 # -------------------------Loading the data-----------------------------
@@ -473,4 +470,3 @@ print("Maximum gamma accuracy",max_gamma_accuracy)
 print(optimal_gamma)
 print(optimal_gamma_C)
 
-'''
