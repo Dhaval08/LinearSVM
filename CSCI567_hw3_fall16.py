@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from svmutil import *
 
 # **************************Part A *************************************
-'''
+
 def calculateMSE(parameters, data, target):
 
     total = 0
@@ -14,6 +14,40 @@ def calculateMSE(parameters, data, target):
         total = total + math.pow((np.dot(parameters[:,0], data[i,:])) - target[i], 2)
 
     return total/len(target)
+
+#def g1Function(target, size):
+
+def g1Function(target, size):
+    bias_list= []
+    variance_list = []
+    mean_squared_error = []
+
+    for i in range(0, len(target)):
+        predicted = np.ones(shape=(size,1))
+
+        mean_predicted = np.mean(predicted)
+
+        variance_sum = 0
+
+        for k in range(0, len(predicted)):
+            variance_sum = variance_sum + math.pow(predicted[k] - mean_predicted , 2)
+
+        variance_list.append(variance_sum/len(predicted))
+
+        total = 0.0
+        for j in range (0, len(target[i])):
+            total = total + math.pow(predicted[j] - target[i][j], 2)
+
+        bias_list.append(total/len(target[i]))   # Storing bias for each data set
+
+    bias = sum(bias_list)/len(bias_list)
+    variance = sum(variance_list)/len(variance_list)
+
+    print bias,'\t \t', variance, '\n'
+
+    plt.hist(mean_squared_error, bins=10)
+    plt.show()
+
 
 def g2Function(target, size):
     g2_data = np.ones(shape=(size,1))
@@ -26,7 +60,6 @@ def g2Function(target, size):
     for i in range(0, len(target)):
         g1_weights = linearRegression(split_g2_data[i], target[i], g1_weights)
         mean_squared_error.append(calculateMSE(g1_weights, split_g2_data[i], target[i]))
-
 
         predicted = np.dot(g1_weights[:,0], np.transpose(split_g2_data[i]))
 
@@ -90,7 +123,6 @@ def g3Function(data, target, size):
 
     print bias,'\t \t', variance, '\n'
 
-
     plt.hist(mean_squared_error, bins=10)
     plt.show()
 
@@ -104,7 +136,6 @@ def g4Function(data, target, size):
         g2_data = np.ones(shape=(size,1))
         g2_data = np.concatenate((g2_data, data[i]), axis = 1)
         g2_data = np.concatenate((g2_data, np.power(data[i], 2)), axis=1)
-
 
         g1_weights = np.zeros(shape=(2,1))
 
@@ -132,7 +163,6 @@ def g4Function(data, target, size):
     variance = sum(variance_list)/len(variance_list)
 
     print bias,'\t \t', variance, '\n'
-
 
     plt.hist(mean_squared_error, bins=10)
     plt.show()
@@ -176,7 +206,6 @@ def g5Function(data, target, size):
 
     print bias,'\t \t', variance, '\n'
 
-
     plt.hist(mean_squared_error, bins=10)
     plt.show()
 
@@ -219,7 +248,6 @@ def g6Function(data, target, size):
     variance = sum(variance_list)/len(variance_list)
 
     print bias,'\t \t', variance, '\n'
-
 
     plt.hist(mean_squared_error, bins=10)
     plt.show()
@@ -275,11 +303,8 @@ def hFunction(data, target, size):
 
     print bias,'\t \t', variance, '\n'
 
-
     plt.hist(mean_squared_error, bins=10)
     plt.show()
-
-
 
 uniform_samples = np.empty(shape=(1000,1))
 
@@ -293,10 +318,10 @@ for i in range (0, 1000):
 split_data = np.split(uniform_samples, 100)
 split_target = np.split(target, 100)
 
-
 print 'For 10 samples in each data set'
 print 'Bias \t \t \t \t \t Variance'
 
+g1Function(split_target, 1000)
 g2Function(split_target, 1000)
 
 g3Function(split_data, split_target, 10)
@@ -321,19 +346,19 @@ for i in range (0, 10000):
 split_data = np.split(uniform_samples, 100)
 split_target = np.split(target, 100)
 
+g1Function(split_target, 10000)
 g2Function(split_target, 10000)
 
 g3Function(split_data, split_target, 100)
 g4Function(split_data, split_target, 100)
 g5Function(split_data, split_target, 100)
-
 g6Function(split_data, split_target, 100)
 
 
 print 'For function h'
 hFunction(split_data, split_target, 100)
-'''
 
+'''
 
 # **************************Part B *************************************
 
@@ -357,7 +382,6 @@ def preProcess(train):
                     second[j,0] = 1
                 if(train[j,i] == 0):
                     third[j,0] = 1
-
 
             transformed_data = np.concatenate((transformed_data, first), axis=1)
             transformed_data = np.concatenate((transformed_data, second), axis=1)
@@ -397,6 +421,8 @@ phishing_test = np.asarray(phishing_test)
 processed_data = preProcess(phishing_train)
 processed_test = preProcess(phishing_test)
 
+print(sum(processed_data))
+
 train_target = train_target.tolist()
 test_target = test_target.tolist()
 
@@ -434,13 +460,16 @@ optimal_polynomial_C = 0
 for i in (-3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7):
 
     C = math.pow(4, i)
-    for degree in [1, 2, 3]:
+    for degree in (1, 2, 3):
         m = svm_train(train_target[0], processed_data, '-c {} -v 3 -d {} -q'.format(C, degree))
 
         if m > max_polynomial_accuracy:
             max_polynomial_accuracy = m
             optimal_polynomial_degree = degree
             optimal_polynomial_C = C
+
+        if C == 16384 and degree == 2:
+            print(m)
 
 print(optimal_polynomial_C)
 print(optimal_polynomial_degree)
@@ -466,7 +495,8 @@ for i in (-3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7):
             optimal_gamma = gamma
             optimal_gamma_C = C
 
+
 print("Maximum gamma accuracy",max_gamma_accuracy)
 print(optimal_gamma)
 print(optimal_gamma_C)
-
+'''
