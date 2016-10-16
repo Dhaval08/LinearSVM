@@ -264,7 +264,7 @@ def regularizedRegression(data, target, parameters, lamda):
 
     return parameters
 
-def hFunction(data, target, size):
+def hFunction(data, target, size, lamda):
     mean_squared_error = []
     bias_list = []
     variance_list = []
@@ -278,7 +278,7 @@ def hFunction(data, target, size):
 
         g1_weights = np.zeros(shape=(2,1))
 
-        g1_weights = regularizedRegression(g2_data, target[i], g1_weights, 0.001)
+        g1_weights = regularizedRegression(g2_data, target[i], g1_weights, lamda)
         mean_squared_error.append(calculateMSE(g1_weights, g2_data, target[i]))
 
         predicted = np.dot(g1_weights[:,0], np.transpose(g2_data))
@@ -356,7 +356,8 @@ g6Function(split_data, split_target, 100)
 
 
 print 'For function h'
-hFunction(split_data, split_target, 100)
+for lamda in [0.001, 0.003, 0.01, 0.03, 0.1, 0.3, 1]:
+    hFunction(split_data, split_target, 100, lamda)
 
 '''
 
