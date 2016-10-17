@@ -65,8 +65,12 @@ processed_test = preProcess(phishing_test)
 train_target = train_target.tolist()
 test_target = test_target.tolist()
 
+print(sum(sum(processed_test)))
+
+
 processed_data = processed_data.tolist()
 processed_test = processed_test.tolist()
+
 
 optimal_gamma = 0.25
 optimal_C = 1
